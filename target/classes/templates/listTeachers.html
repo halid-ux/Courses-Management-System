@@ -1,0 +1,34 @@
+<th:block>
+<head>
+    <meta charset="utf-8">
+    <title>List Teachers</title>
+</head>
+<body>
+<h1 class="text-info"> List of all Teachers </h1>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Teacher id</th>
+        <th scope="col">Teacher Name</th>
+        <th scope="col">Teacher Surname</th>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <th scope="col">Edit or Delete</th>
+        </th:block>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="teacher: ${teacherList}">
+        <td th:text="${teacher.getId()}"></td>
+        <td th:text="${teacher.getTeacherFullName().getName()}"></td>
+        <td th:text="${teacher.getTeacherFullName().getSurname()}"></td>
+        <td>
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')"><a
+                    th:href="@{/teachers/edit/{id} (id = ${teacher.getId()})}" class="btn btn-info">Edit</a> <a
+                    th:href="@{/teachers/delete/{id} (id=${teacher.getId()})}" class="btn btn-danger">Delete</a>
+            </th:block>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</th:block>
