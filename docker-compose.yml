@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  java_app:
+    build: .
+    container_name: java_app
+    image: halid99/java_app:1.0.0
+    ports:
+      - "9191:9191"
+    environment:
+      db-url: jdbc:postgresql://java_db:5432/postgres
+      db-username: postgres
+      db-password: postgres
+    depends_on:
+      - java_db
+    restart: always
+
+  java_db:
+    container_name: postgresql_container
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /Users/halidveaposki/postgres-data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres-data: {}
