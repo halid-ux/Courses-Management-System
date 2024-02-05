@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kiii-postgres-config
+  namespace: kiii-project
+data:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kiii-postgres-secret
+  namespace: kiii-project
+type: Opaque
+data:
+  password: cG9zdGdyZXM=
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kiii-postgres-vol
+  namespace: kiii-project
+  labels:
+    app: postgres
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kiii-postgres
+  namespace: kiii-project
+spec:
+  serviceName: pg-service
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+        namespace: kiii-project
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          envFrom:
+            - configMapRef:
+                name: kiii-postgres-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kiii-postgres-secret
+                  key: password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: kiii-postgres-vol
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: kiii-postgres-vol
+          persistentVolumeClaim:
+            claimName: kiii-postgres-vol
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kiii-postgres-svc
+  namespace: kiii-project
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432

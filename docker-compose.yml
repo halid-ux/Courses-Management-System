@@ -7,15 +7,16 @@ services:
     image: halid99/java_app:1.0.0
     ports:
       - "9191:9191"
+    command: -init
     environment:
-      db-url: jdbc:postgresql://java_db:5432/postgres
+      db-url: jdbc:postgresql://kiii-postgres-svc:5432/postgres
       db-username: postgres
       db-password: postgres
     depends_on:
-      - java_db
+      - kiii-postgres-svc
     restart: always
 
-  java_db:
+  kiii-postgres-svc:
     container_name: postgresql_container
     image: postgres:latest
     ports:

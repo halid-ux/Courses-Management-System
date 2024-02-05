@@ -62,7 +62,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -118,7 +117,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>courses-management-system</repository>
+                    <repository>courses-management-system-1</repository>
                 </configuration>
             </plugin>
 
