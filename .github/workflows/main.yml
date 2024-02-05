@@ -24,4 +24,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: marijagj/kiii-project-182006:latest
+          tags: halid99//java_app:1.0.0
